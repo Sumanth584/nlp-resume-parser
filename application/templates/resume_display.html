@@ -1,0 +1,113 @@
+<!doctype html>
+<html>
+<head>
+    <title>Resume Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f8f8f8;
+            color: #333;
+        }
+        h2, h3 {
+            color: #4A90E2;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #4A90E2;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .resume-section {
+            background: white;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        /* Additional styles for the upload button */
+        .upload-btn-wrapper {
+            position: fixed;
+            right: 20px;
+            top: 20px;
+        }
+
+        .upload-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #4A90E2;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .upload-btn:hover {
+            background-color: #357ABD;
+        }
+    </style>
+</head>
+<body>
+    <!-- Upload button wrapper -->
+    <div class="upload-btn-wrapper"> 
+        <a href="/upload_job_description">
+          <button class="upload-btn" onclick="location.href='/upload'">Upload Job Description</button>
+        </a>     
+    </div>
+
+    <h2>Resume Details</h2>
+    {% for resume in resumes %}
+        <div class="resume-section">
+            <h3>Basic Information</h3>
+            <table>
+                <tr>
+                    <th>Name</th>
+                    <th>Graduation Year</th>
+                    <th>Education Level</th>
+                </tr>
+                <tr>
+                    <td>{{ resume.name }}</td>
+                    <td>{{ resume.graduation_year }}</td>
+                    <td>{{ resume.education_level }}</td>
+                </tr>
+            </table>
+
+            <h3>Skills</h3>  <!-- Add the skills section -->
+            <ul>
+                {% for skill in resume.skills %}
+                    <li>{{ skill }}</li>
+                {% endfor %}
+            </ul>
+
+            <h3>Work Experience</h3>
+            <table>
+                <tr>
+                    <th>Job Title</th>
+                    <th>Company</th>
+                    <th>Location</th>
+                    <th>Duration</th>
+                    <th>Summary</th>
+                </tr>
+                {% for job in resume.work_experience %}
+                    <tr>
+                        <td>{{ job.job_title }}</td>
+                        <td>{{ job.company }}</td>
+                        <td>{{ job.location }}</td>
+                        <td>{{ job.duration }}</td>
+                        <td>{{ job.job_summary }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    {% endfor %}
+</body>
+</html>

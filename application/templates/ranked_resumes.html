@@ -1,0 +1,175 @@
+<!doctype html>
+<html>
+<head>
+    <title>Ranked Resume Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f8f8f8;
+            color: #333;
+        }
+        h2, h3 {
+            color: #4A90E2;
+        }
+        .resume-section {
+            background: white;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .ranking {
+            font-weight: bold;
+            color: #4A90E2;
+        }
+        .explanation {
+            display: none;
+            margin-top: 15px;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+        }
+
+        /* Chatbot Styles */
+        .chatbot-container {
+            background: #fff;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-top: 20px;
+            width: 300px;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .chatbot-messages {
+            height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+            background: #f8f8f8;
+        }
+
+        #chatbot-input {
+            width: calc(100% - 90px);
+            padding: 10px;
+            border: 1px solid #ddd;
+            margin-right: 10px;
+        }
+
+        .chatbot-container button {
+            padding: 10px 15px;
+            background-color: #4A90E2;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .chatbot-container button:hover {
+            background-color: #3a78c3;
+        }
+    </style>
+</head>
+<body>
+    <h2>Ranked Resume Details</h2>
+    {% for ranked_resume in ranked_resumes %}
+        <div class="resume-section">
+            <div class="resume-header">
+                <span class="ranking">Rank: {{ loop.index }}</span>
+                <button onclick="toggleExplanation('explanation-{{ loop.index }}')">Toggle Explanation</button>
+            </div>
+            <h3>Basic Information</h3>
+            <p>Name: {{ ranked_resume['details'].get('basic_info', {}).get('name', 'N/A') }}</p>
+            <p>Email: {{ ranked_resume['details'].get('basic_info', {}).get('email', 'N/A') }}</p>
+            <p>Graduation Year: {{ ranked_resume['details'].get('basic_info', {}).get('graduation_year', 'N/A') }}</p>
+            <!-- Add more fields as needed -->
+
+            <div id="explanation-{{ loop.index }}" class="explanation" style="display: none;">
+                <p>{{ ranked_resume['explanation'] }}</p>
+            </div>
+        </div>
+    {% endfor %}
+
+    <!-- Chatbot Section -->
+    <div class="chatbot-container">
+        <h3>Resume Chatbot</h3>
+        <div id="chatbot-messages" class="chatbot-messages"></div>
+        <input type="text" id="chatbot-input" placeholder="Ask me something about the resume..." onkeypress="handleKeyPress(event)">
+        <button onclick="sendChat()">Send</button>
+    </div>
+
+    <script>
+        function toggleExplanation(id) {
+            var explanations = document.querySelectorAll('.explanation');
+            explanations.forEach(function(explanation) {
+                if(explanation.id !== id) {
+                    explanation.style.display = 'none';
+                }
+            });
+
+            var selectedExplanation = document.getElementById(id);
+            if (selectedExplanation.style.display === "none") {
+                selectedExplanation.style.display = "block";
+            } else {
+                selectedExplanation.style.display = "none";
+            }
+        }
+
+        function sendChat() {
+            var inputField = document.getElementById('chatbot-input');
+            var message = inputField.value.trim();
+            var dataToSend = JSON.stringify({ query: message });
+            
+            console.log("Data being sent:", dataToSend);  // Log the data being sent
+            if (message) {
+                addMessageToChat("User", message);
+                inputField.value = '';
+        
+                console.log("Sending query:", message);  // Log the message being sent
+        
+                fetch('/chatbot', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ query: message })
+                })
+                .then(response => {
+                    console.log("Raw response:", response);  // Log the raw response
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log("Processed data:", data);  // Log the processed data
+                    if (data && data.answer) {
+                        addMessageToChat("Bot", data.answer);
+                    } else {
+                        throw new Error("Received undefined in data.answer");
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    addMessageToChat("Bot", "Sorry, I couldn't process your request.");
+                });
+            }
+        }
+        
+        function addMessageToChat(sender, message) {
+            var chatMessages = document.getElementById('chatbot-messages');
+            var newMessage = document.createElement('p');
+            newMessage.textContent = sender + ": " + message;
+            chatMessages.appendChild(newMessage);
+        }
+        
+        
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendChat();
+            }
+        }
+    </script>
+</body>
+</html>

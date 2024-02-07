@@ -1,94 +1,129 @@
-<!doctype html>
-<html>
-    <head>
-        <title>Upload your resume</title>
-        <style>
-            body{
-            background: rgba(0,0,0,0.9);
-            }
-            form{
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            margin-top: -100px;
-            margin-left: -250px;
-            width: 500px;
-            height: 200px;
-            border: 4px dashed #fff;
-            }
-            form p{
-            width: 100%;
-            height: 100%;
-            text-align: center;
-            line-height: 170px;
-            color: #ffffff;
-            font-family: Arial;
-            }
-            form input{
-            position: absolute;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Strike</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
             margin: 0;
             padding: 0;
-            width: 100%;
-            height: 100%;
-            outline: none;
-            opacity: 0;
-            }
-            form button{
+            box-sizing: border-box;
+            color: #333;
+            background-color: #f7f8f9;
+        }
+        .header {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+        }
+        .header h1 {
             margin: 0;
-            color: #fff;
-            background: #16a085;
-            border: none;
-            width: 508px;
-            height: 35px;
-            margin-top: -20px;
-            margin-left: -4px;
+            font-weight: 700;
+        }
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            list-style-type: none;
+            padding: 0;
+        }
+        .nav-links li {
+            padding: 0 20px;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: white;
+            transition: color 0.3s ease;
+        }
+        .nav-links a:hover {
+            color: #f7f8f9;
+        }
+        .content {
+            text-align: center;
+            padding: 50px 20px;
+        }
+        .content h2 {
+            color: #333;
+        }
+        .upload-form {
+            margin: 30px auto;
+            padding: 20px;
+            background: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 500px;
+        }
+        .upload-form input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
             border-radius: 4px;
-            border-bottom: 4px solid #117A60;
-            transition: all .2s ease;
-            outline: none;
-            }
-            form button:hover{
-            background: #149174;
-                color: #0C5645;
-            }
-            form button:active{
-            border:0;
-            }
-        </style>
-        <script>
-            function handleFileSelection(event) {
-                const fileInput = event.target;
-                const file = fileInput.files[0];
-                const fileName = file.name;
+        }
+        .upload-form button {
+            width: 100%;
+            padding: 10px;
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .upload-form button:hover {
+            background-color: #4cae4c;
+        }
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Strike</h1>
+        <ul class="nav-links">
+            <li><a href="#about">About</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#login">Login</a></li>
+            <li><a href="#register">Register</a></li>
+        </ul>
+    </div>
 
-                const formText = document.getElementById("form-text");
-                formText.innerText = fileName;
-            }
+    <div class="content">
+        <h2>Welcome to Strike</h2>
+        <p>Connecting talents with opportunities.</p>
 
-            function handleButtonClick() {
-                const button = document.querySelector('button[type="submit"]');
-                button.innerText = "Processing, please wait...";
-            }
+        <div class="upload-form">
+            <form method="post" enctype="multipart/form-data">
+                <input type="file" name="files[]" multiple>
+                <button type="submit">Upload Resumes</button>
+            </form>
+        </div>
 
-            function handleFormReset() {
-                const formText = document.getElementById("form-text");
-                formText.innerText = "Drag your resume here or click in this area.";
+        <section id="features">
+            <h2>Why Choose Strike?</h2>
+            <p>Discover top talents with our advanced recruiting tools.</p>
+        </section>
 
-                const button = document.querySelector('button[type="submit"]');
-                button.innerText = "Upload";
-            }
+        <section id="about">
+            <h2>About Us</h2>
+            <p>Strike is a leading recruiting company with a mission to bridge the gap between employers and job seekers.</p>
+        </section>
+    </div>
 
-            window.addEventListener("pageshow", function(event) {
-                const form = document.querySelector("form");
-                form.reset();
-            });
-        </script>
-    </head>
-    <body>
-        <form method=post enctype=multipart/form-data onreset="handleFormReset()">
-            <input type=file name=file onchange="handleFileSelection(event)">
-            <p id=form-text>Drag your resume here or click in this area.</p>
-            <button type=submit value=Upload onclick="handleButtonClick()">Upload</button>
-        </form>
-    </body>
+    <footer>
+        <p>© 2024 Strike. All rights reserved.</p>
+    </footer>
+</body>
 </html>
